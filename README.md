@@ -19,6 +19,13 @@ export KING_ADDRESS=http://localhost:3000
 ./evo-runner .
 ```
 
+## Capabilities
+
+Beyond the standard pipeline evaluation stage, this agent handles two additional responsibilities:
+
+- **Error Recovery Analysis** — When a pipeline stage fails, king asks this agent to analyze the failure and recommend a recovery action (`retry`, `decompose`, `skip`, or `abort`). Enforces max 3 retries and restricts `skip` to evaluation/skill_manage stages only.
+- **Task Decomposition** — When a task is too complex (auto-detected or manually triggered), king asks this agent to break it into smaller subtasks with specific types, summaries, and payloads.
+
 ## Structure
 
 ```

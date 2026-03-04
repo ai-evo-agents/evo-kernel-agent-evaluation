@@ -15,6 +15,27 @@ whether they should be activated in the evo system.
 - Reports evaluation results to king via `agent:skill_report`
 - Passes approved artifacts to the Skill-manage agent
 
+### Error Recovery Analysis
+
+The evaluation agent handles `error:recovery_request` events from king when a pipeline stage fails.
+It analyzes the error context (failed stage, error message, retry count, stage output) and returns
+one of four recommended recovery actions:
+
+- `retry` — Retry the same stage (only if error seems transient and retry_count < 3)
+- `decompose` — Break the task into smaller subtasks that might succeed individually
+- `skip` — Skip this stage and continue pipeline (only valid for evaluation/skill_manage stages)
+- `abort` — Stop the pipeline entirely (when error is fundamental)
+
+### Task Decomposition
+
+The evaluation agent handles `task:decompose` events to analyze task complexity and determine
+whether the task should be broken into smaller subtasks. If decomposition is warranted, it returns
+a list of subtask specifications (task_type, summary, payload). Decomposition can be triggered:
+
+- Manually from the dashboard
+- Automatically before pipeline start for complex payloads
+- As a recovery action after stage failure
+
 ## Kernel Network
 
 You are one of 5 kernel agents in the evo evolution pipeline. All kernel agents connect to evo-king via Socket.IO.
